@@ -1,0 +1,8 @@
+[submodule "3rdParty/mumble-plugin-cpp"]
+	path = 3rdParty/mumble-plugin-cpp
+	url = https://github.com/mumble-voip/mumble-plugin-cpp.git
+[submodule "3rdParty/nlohmann-json"]
+	path = 3rdParty/nlohmann-json
+	url = https://github.com/nlohmann/json.git
+	branch = release/3.9.1
+	shallow = true
