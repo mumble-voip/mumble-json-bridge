@@ -1,1 +1,13 @@
-
+jobs:
+    - job: Windows
+      pool:
+        vmImage: 'windows-2019'
+      steps:
+        - script: git submodule update --init --recursive
+          displayName: "Fetch submodules"
+        - script: "call .ci/azure/install_windows.bat"
+          displayName: "Install Dependencies"
+        - script: "call .ci/azure/build_windows.bat"
+          displayName: "Build"
+        - script: "call .ci/azure/test_windows.bat"
+          displayName: "Test"
