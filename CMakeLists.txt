@@ -20,6 +20,7 @@ else()
 endif()
 
 
+option(cli "Build the CLI" ON)
 option(plugin "Build the Mumble plugin" ON)
 
 
@@ -42,3 +43,6 @@ if (plugin)
 	add_subdirectory(plugin)
 endif()
 
+if (cli)
+	add_subdirectory(cli)
+endif()

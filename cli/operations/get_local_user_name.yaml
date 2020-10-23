@@ -1,0 +1,25 @@
+operations:
+    - operation: get_local_user_name
+      depends:
+          - name: connectionID
+            type: number_integer
+            function:
+                type: api
+                name: getActiveServerConnection
+          - name: userID
+            type: number_integer
+            function:
+                type: api
+                name: getLocalUserID
+                parameter:
+                    - name: connection
+                      value: connectionID
+      executes:
+          function:
+              type: api
+              name: getUserName
+              parameter:
+                  - name: connection
+                    value: connectionID
+                  - name: user_id
+                    value: userID

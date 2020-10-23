@@ -4,3 +4,4 @@ rem that can be found in the LICENSE file at the root of the
 rem source tree.
 
 vcpkg install boost-thread --triplet x64-windows
+vcpkg install boost-program-options --triplet x64-windows

@@ -7,4 +7,4 @@ set -e
 
 sudo apt update
 sudo apt install cmake
-sudo apt install libboost-thread-dev
+sudo apt install libboost-thread-dev libboost-program-options-dev
