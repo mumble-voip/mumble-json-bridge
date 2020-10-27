@@ -60,7 +60,8 @@ namespace JsonBridge {
 			/**
 			 * Executes the requested API function
 			 *
-			 * @returns JSON representation of the message describing the status of the invocation (including potential return values)
+			 * @returns JSON representation of the message describing the status of the invocation (including potential
+			 * return values)
 			 */
 			nlohmann::json execute(const std::string &bridgeSecret) const;
 		};

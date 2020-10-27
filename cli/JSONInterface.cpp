@@ -72,14 +72,14 @@ namespace JsonBridge {
 		}
 
 		nlohmann::json JSONInterface::process(nlohmann::json msg) const {
-			msg["secret"] = m_secret;
+			msg["secret"]    = m_secret;
 			msg["client_id"] = m_id;
 
 			NamedPipe::write(Bridge::s_pipePath, msg.dump(), m_writeTimeout);
 
 			nlohmann::json response = nlohmann::json::parse(m_pipe.read_blocking(m_readTimeout));
 
-			if (response["secret"].get<std::string>() != m_bridgeSecret) {
+			if (response["secret"].get< std::string >() != m_bridgeSecret) {
 				std::cerr << "[ERROR]: Bridge secret doesn't match" << std::endl;
 				return {};
 			}
@@ -89,6 +89,6 @@ namespace JsonBridge {
 
 			return response;
 		}
-	};
-};
-};
+	}; // namespace CLI
+};     // namespace JsonBridge
+};     // namespace Mumble

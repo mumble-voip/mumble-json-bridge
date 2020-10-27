@@ -10,34 +10,36 @@
 #include <mumble/json_bridge/messages/Message.h>
 
 void checkAPIResponse(const nlohmann::json &response) {
-	if (response.contains("response_type") && response["response_type"].get<std::string>() == "api_call") {
+	if (response.contains("response_type") && response["response_type"].get< std::string >() == "api_call") {
 		// All good
 		return;
 	}
-	
+
 	// There seems to have been an error
 	if (!response.contains("response_type") || !response.contains("response")) {
 		// We can't process this response - seems invalid
 		throw OperationException("Got invalid response from Mumble-JSON-Bridge.");
 	}
-	
-	if (response["response_type"].get<std::string>() == "api_error"
-		|| response["response_type"].get<std::string>() == "api_error_optional"
-		|| response["response_type"].get<std::string>() == "error") {
-		throw OperationException(response["response"]["error_message"].get<std::string>());
+
+	if (response["response_type"].get< std::string >() == "api_error"
+		|| response["response_type"].get< std::string >() == "api_error_optional"
+		|| response["response_type"].get< std::string >() == "error") {
+		throw OperationException(response["response"]["error_message"].get< std::string >());
 	} else {
 		throw OperationException("Generic API error ecountered");
 	}
 }
 
-nlohmann::json handle_get_local_user_name_operation(const nlohmann::json &msg,
-	const std::function<nlohmann::json(nlohmann::json &)> &executeQuery) {
+nlohmann::json
+	handle_get_local_user_name_operation(const nlohmann::json &msg,
+										 const std::function< nlohmann::json(nlohmann::json &) > &executeQuery) {
 	if (msg.contains("parameter")) {
-		::Mumble::JsonBridge::Messages::InvalidMessageException("Operation \"get_local_user_name\" does not take any parameter");
+		::Mumble::JsonBridge::Messages::InvalidMessageException(
+			"Operation \"get_local_user_name\" does not take any parameter");
 	}
 
 	// Obtain all needed values
-	
+
 	// clang-format off
 	nlohmann::json query1 = {
 		{ "message_type", "api_call" },
@@ -48,12 +50,12 @@ nlohmann::json handle_get_local_user_name_operation(const nlohmann::json &msg,
 		}
 	};
 	// clang-format on
-	
+
 	nlohmann::json response1 = executeQuery(query1);
-	
+
 	checkAPIResponse(response1);
-	int connectionID = response1["response"]["return_value"].get<int>();
-	
+	int connectionID = response1["response"]["return_value"].get< int >();
+
 	// clang-format off
 	nlohmann::json query2 = {
 		{ "message_type", "api_call" },
@@ -69,11 +71,11 @@ nlohmann::json handle_get_local_user_name_operation(const nlohmann::json &msg,
 		}
 	};
 	// clang-format on
-	
+
 	nlohmann::json response2 = executeQuery(query2);
-	
+
 	checkAPIResponse(response2);
-	int userID = response2["response"]["return_value"].get<int>();
+	int userID = response2["response"]["return_value"].get< int >();
 
 
 	// Now actually execute the operation
@@ -93,32 +95,34 @@ nlohmann::json handle_get_local_user_name_operation(const nlohmann::json &msg,
 		}
 	};
 	// clang-format on
-	
+
 	nlohmann::json result = executeQuery(operationQuery);
-	
+
 	return result;
 }
 
 nlohmann::json handle_move_operation(const nlohmann::json &msg,
-	const std::function<nlohmann::json(nlohmann::json &)> &executeQuery) {
+									 const std::function< nlohmann::json(nlohmann::json &) > &executeQuery) {
 	// Validate and extract parameter
-	
+
 	MESSAGE_ASSERT_FIELD(msg, "parameter", object);
-	
+
 	const nlohmann::json &operationParams = msg["parameter"];
-	
+
 	if (operationParams.size() != 2) {
-		throw ::Mumble::JsonBridge::Messages::InvalidMessageException(std::string("Operation \"move\" expects 2 parameter, but was provided with ") + std::to_string(operationParams.size()));
+		throw ::Mumble::JsonBridge::Messages::InvalidMessageException(
+			std::string("Operation \"move\" expects 2 parameter, but was provided with ")
+			+ std::to_string(operationParams.size()));
 	}
-	
+
 	MESSAGE_ASSERT_FIELD(operationParams, "user", string);
-	std::string user = operationParams["user"].get<std::string>();
-	
+	std::string user = operationParams["user"].get< std::string >();
+
 	MESSAGE_ASSERT_FIELD(operationParams, "channel", string);
-	std::string channel = operationParams["channel"].get<std::string>();
+	std::string channel = operationParams["channel"].get< std::string >();
 
 	// Obtain all needed values
-	
+
 	// clang-format off
 	nlohmann::json query1 = {
 		{ "message_type", "api_call" },
@@ -129,12 +133,12 @@ nlohmann::json handle_move_operation(const nlohmann::json &msg,
 		}
 	};
 	// clang-format on
-	
+
 	nlohmann::json response1 = executeQuery(query1);
-	
+
 	checkAPIResponse(response1);
-	int connectionID = response1["response"]["return_value"].get<int>();
-	
+	int connectionID = response1["response"]["return_value"].get< int >();
+
 	// clang-format off
 	nlohmann::json query2 = {
 		{ "message_type", "api_call" },
@@ -151,12 +155,12 @@ nlohmann::json handle_move_operation(const nlohmann::json &msg,
 		}
 	};
 	// clang-format on
-	
+
 	nlohmann::json response2 = executeQuery(query2);
-	
+
 	checkAPIResponse(response2);
-	int userID = response2["response"]["return_value"].get<int>();
-	
+	int userID = response2["response"]["return_value"].get< int >();
+
 	// clang-format off
 	nlohmann::json query3 = {
 		{ "message_type", "api_call" },
@@ -173,11 +177,11 @@ nlohmann::json handle_move_operation(const nlohmann::json &msg,
 		}
 	};
 	// clang-format on
-	
+
 	nlohmann::json response3 = executeQuery(query3);
-	
+
 	checkAPIResponse(response3);
-	int channelID = response3["response"]["return_value"].get<int>();
+	int channelID = response3["response"]["return_value"].get< int >();
 
 
 	// Now actually execute the operation
@@ -199,23 +203,23 @@ nlohmann::json handle_move_operation(const nlohmann::json &msg,
 		}
 	};
 	// clang-format on
-	
+
 	nlohmann::json result = executeQuery(operationQuery);
-	
+
 	return result;
 }
 
 nlohmann::json handleOperation(const nlohmann::json &msg,
-	const std::function<nlohmann::json(nlohmann::json &)> &executeQuery) {
+							   const std::function< nlohmann::json(nlohmann::json &) > &executeQuery) {
 	if (!msg.contains("operation") || !msg["operation"].is_string()) {
 		throw OperationException("Missing \"operation\" field (required to be of type string)");
 	}
 
-	if (msg["operation"].get<std::string>() == "get_local_user_name") {
+	if (msg["operation"].get< std::string >() == "get_local_user_name") {
 		return handle_get_local_user_name_operation(msg, executeQuery);
-	} else if (msg["operation"].get<std::string>() == "move") {
+	} else if (msg["operation"].get< std::string >() == "move") {
 		return handle_move_operation(msg, executeQuery);
 	} else {
-		throw OperationException(std::string("Unknown operation \"") + msg["operation"].get<std::string>() + "\"");
+		throw OperationException(std::string("Unknown operation \"") + msg["operation"].get< std::string >() + "\"");
 	}
 }

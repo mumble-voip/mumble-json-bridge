@@ -11,8 +11,8 @@ namespace Mumble {
 namespace JsonBridge {
 
 	/**
-	 * Helper class that disables copy-constructors. Extending this class will prevent the auto-generation of copy-constructors
-	 * of the subclass.
+	 * Helper class that disables copy-constructors. Extending this class will prevent the auto-generation of
+	 * copy-constructors of the subclass.
 	 */
 	class NonCopyable {
 	public:

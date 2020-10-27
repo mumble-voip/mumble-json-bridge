@@ -95,8 +95,8 @@ namespace JsonBridge {
 		NamedPipe &operator=(NamedPipe &&other);
 
 		/**
-		 * Creates a new named pipe at the specified location. If such a pipe (or other file) already exists at the given
-		 * location, this function will fail.
+		 * Creates a new named pipe at the specified location. If such a pipe (or other file) already exists at the
+		 * given location, this function will fail.
 		 *
 		 * @param pipePath The path at which the pipe shall be created
 		 * @returns A NamedPipe object wrapping the newly created pipe
@@ -105,12 +105,12 @@ namespace JsonBridge {
 		/**
 		 * Writes a message to the named pipe at the given location
 		 *
-		 * @param pipePath The path at which the pipe is expected to exist. If the pipe does not exist, the function will poll for its
-		 * existance until it times out.
+		 * @param pipePath The path at which the pipe is expected to exist. If the pipe does not exist, the function
+		 * will poll for its existance until it times out.
 		 * @param content The messages that should be written to the named pipe
-		 * @param timeout How long this function is allowed to take in milliseconds. Note that the timeout is only respected very roughly
-		 * (especially on Windows) and should therefore rather be used to specify the general order of magnitude of the timeout instead of
-		 * the exact timeout-interval.
+		 * @param timeout How long this function is allowed to take in milliseconds. Note that the timeout is only
+		 * respected very roughly (especially on Windows) and should therefore rather be used to specify the general
+		 * order of magnitude of the timeout instead of the exact timeout-interval.
 		 */
 		static void write(const std::filesystem::path &pipePath, const std::string &content,
 						  unsigned int timeout = 1000);
@@ -125,11 +125,11 @@ namespace JsonBridge {
 		void write(const std::string &content, unsigned int timeout = 1000) const;
 
 		/**
-		 * Reads content from the wrapped named pipe. This function will block until there is content available or the timeout is over.
-		 * Once started this function will read all available content until EOF in a single block.
+		 * Reads content from the wrapped named pipe. This function will block until there is content available or the
+		 * timeout is over. Once started this function will read all available content until EOF in a single block.
 		 *
-		 * @param timeout How long this function may wait for content. Note that this will not be respected precisely. Rather this
-		 * specifies the general order of magnitude of the timeout.
+		 * @param timeout How long this function may wait for content. Note that this will not be respected precisely.
+		 * Rather this specifies the general order of magnitude of the timeout.
 		 * @returns The read content
 		 */
 		[[nodiscard]] std::string
@@ -143,7 +143,7 @@ namespace JsonBridge {
 		/**
 		 * Destroys the wrapped named pipe. After having called this function the pipe does no
 		 * longer exist in the OS's filesystem and this wrapper will become unusable.
-		 * 
+		 *
 		 * @note This function is called automatically by the object's destructor
 		 * @note Calling this function multiple times is allowed. All but the first invocation are turned into no-opts.
 		 */

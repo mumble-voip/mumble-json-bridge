@@ -20,7 +20,7 @@ namespace JsonBridge {
 	 *
 	 * @see Mumble::JsonBridge::INVALID_CLIENT_ID
 	 */
-	using client_id_t                       = unsigned int;
+	using client_id_t = unsigned int;
 	/**
 	 * The value representing an invalid client ID. This can be used to represent uninitialized IDs.
 	 */

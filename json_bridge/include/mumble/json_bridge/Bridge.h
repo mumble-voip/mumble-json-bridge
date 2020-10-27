@@ -26,14 +26,15 @@ namespace Mumble {
 namespace JsonBridge {
 
 	/**
-	 * Tbis class represents the heart of the Mumble-JSON-Bridge. It is responsible for creating a new thread in which it'll create
-	 * the named pipe used for communication. It will enter a loop of polling for messages until the bridge is stopped again.
+	 * Tbis class represents the heart of the Mumble-JSON-Bridge. It is responsible for creating a new thread in which
+	 * it'll create the named pipe used for communication. It will enter a loop of polling for messages until the bridge
+	 * is stopped again.
 	 */
 	class Bridge {
 	private:
 		/**
-		 * Little helper mutex that is needed in order to ensure that m_workerThread has been assigned properly before being
-		 * accessed for the first time in the new thread.
+		 * Little helper mutex that is needed in order to ensure that m_workerThread has been assigned properly before
+		 * being accessed for the first time in the new thread.
 		 */
 		std::mutex m_startMutex;
 		/**
@@ -107,13 +108,14 @@ namespace JsonBridge {
 		/**
 		 * Creates a new instance of this Bridge
 		 *
-		 * @param api A **reference** to the MumbleAPI. The lifetime of the referenced API object must not be shorter than the lifetime
-		 * of this Bridge object!
+		 * @param api A **reference** to the MumbleAPI. The lifetime of the referenced API object must not be shorter
+		 * than the lifetime of this Bridge object!
 		 */
 		Bridge(const MumbleAPI &api);
 
 		/**
-		 * Start the bridge. Note that this will be done in a different thread, so this function is will return immediately.
+		 * Start the bridge. Note that this will be done in a different thread, so this function is will return
+		 * immediately.
 		 */
 		void start();
 		/**

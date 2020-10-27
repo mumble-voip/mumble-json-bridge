@@ -3,19 +3,19 @@
 // that can be found in the LICENSE file at the root of the
 // source tree.
 
-#include "JSONInterface.h"
 #include "Instruction.h"
 #include "JSONInstruction.h"
+#include "JSONInterface.h"
 #include "handleOperation.h"
 
-#include <boost/program_options.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/program_options.hpp>
 
 #include <nlohmann/json.hpp>
 
+#include <filesystem>
 #include <iostream>
 #include <string>
-#include <filesystem>
 
 int main(int argc, char **argv) {
 	try {
@@ -24,12 +24,13 @@ int main(int argc, char **argv) {
 		uint32_t readTimeout;
 		uint32_t writeTimeout;
 
-		desc.add_options()
-			("help,h", "Produces this help message")
-			("json,j", boost::program_options::value<std::string>(), "Specifies the JSON message to be sent to Mumble")
-			("read-timeout,r", boost::program_options::value<uint32_t>(&readTimeout)->default_value(1000), "The timeout for read-operations (in ms)")
-			("write-timeout,w", boost::program_options::value<uint32_t>(&writeTimeout)->default_value(100), "The timeout for write-operations (in ms)")
-		;
+		desc.add_options()("help,h", "Produces this help message")("json,j",
+																   boost::program_options::value< std::string >(),
+																   "Specifies the JSON message to be sent to Mumble")(
+			"read-timeout,r", boost::program_options::value< uint32_t >(&readTimeout)->default_value(1000),
+			"The timeout for read-operations (in ms)")(
+			"write-timeout,w", boost::program_options::value< uint32_t >(&writeTimeout)->default_value(100),
+			"The timeout for write-operations (in ms)");
 
 		boost::program_options::variables_map vm;
 		boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
@@ -42,10 +43,10 @@ int main(int argc, char **argv) {
 
 		nlohmann::json json;
 		if (vm.count("json")) {
-			json = nlohmann::json::parse(vm["json"].as<std::string>());
+			json = nlohmann::json::parse(vm["json"].as< std::string >());
 		} else {
 			// Read all content from stdin
-			std::string content(std::istreambuf_iterator<char>(std::cin), {});
+			std::string content(std::istreambuf_iterator< char >(std::cin), {});
 			boost::trim(content);
 
 			json = nlohmann::json::parse(content);
@@ -69,4 +70,3 @@ int main(int argc, char **argv) {
 
 	return 0;
 }
-

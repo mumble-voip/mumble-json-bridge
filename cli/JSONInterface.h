@@ -63,4 +63,3 @@ namespace JsonBridge {
 };     // namespace Mumble
 
 #endif // MUMBLE_JSONBRIDGE_CLI_INTERFACE_H_
-

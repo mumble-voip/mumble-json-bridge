@@ -6,8 +6,6 @@
 
 namespace Mumble {
 namespace JsonBridge {
-	namespace Messages {
-
-	};
-};
-};
+	namespace Messages {};
+}; // namespace JsonBridge
+}; // namespace Mumble

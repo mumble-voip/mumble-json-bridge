@@ -35,4 +35,3 @@ namespace JsonBridge {
 
 
 #endif // MUMBLE_JSONBRIDGE_CLI_JSONINSTRUCTION_H_
-

@@ -15,8 +15,8 @@
  * Exception that is being thrown if the execution of an operation fails.
  */
 class OperationException : public std::logic_error {
-	public:
-		using std::logic_error::logic_error;
+public:
+	using std::logic_error::logic_error;
 };
 
 /**
@@ -31,4 +31,3 @@ nlohmann::json handleOperation(const nlohmann::json &msg,
 							   const std::function< nlohmann::json(nlohmann::json &) > &executeQuery);
 
 #endif // MUMBLE_JSONBRIDGE_CLI_HANDLEOPERATION_H_
-

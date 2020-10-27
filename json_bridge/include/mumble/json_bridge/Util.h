@@ -22,8 +22,7 @@ namespace JsonBridge {
 		std::string generateRandomString(size_t size);
 
 	}; // namespace Util
-}; // namespace JsonBridge
-}; // namespace Mumble
+};     // namespace JsonBridge
+};     // namespace Mumble
 
 #endif // MUMBLE_JSONBRIDGE_UTILS_H_
-

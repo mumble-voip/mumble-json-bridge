@@ -197,7 +197,7 @@ namespace JsonBridge {
 	}
 
 	void Bridge::handleDisconnect(const nlohmann::json &msg) {
-		client_id_t id = msg["client_id"].get<client_id_t>();
+		client_id_t id = msg["client_id"].get< client_id_t >();
 		// Move the client out of the list of known clients
 		BridgeClient client = std::move(m_clients[id]);
 		m_clients.erase(id);

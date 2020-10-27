@@ -18,16 +18,14 @@ namespace JsonBridge {
 		nlohmann::json JSONInstruction::execute(const JSONInterface &jsonInterface) {
 			MESSAGE_ASSERT_FIELD(m_msg, "message_type", string);
 
-			if (m_msg["message_type"].get<std::string>() == "api_call") {
+			if (m_msg["message_type"].get< std::string >() == "api_call") {
 				return jsonInterface.process(m_msg);
-			} else if (m_msg["message_type"].get<std::string>() == "operation") {
+			} else if (m_msg["message_type"].get< std::string >() == "operation") {
 				return handleOperation(m_msg["message"],
-					[&jsonInterface](nlohmann::json &msg) {
-						return jsonInterface.process(msg);
-					});
+									   [&jsonInterface](nlohmann::json &msg) { return jsonInterface.process(msg); });
 			} else {
 				throw Messages::InvalidMessageException(std::string("Unknown \"message_type\" option \"")
-						+ m_msg["message_type"].get<std::string>() + "\"");
+														+ m_msg["message_type"].get< std::string >() + "\"");
 			}
 		}
 
