@@ -47,7 +47,7 @@ the sent message.
 {
     "message_type": "api_call",
     "message": {
-        "function": "getActiveConnection"
+        "function": "getActiveServerConnection"
     }
 }
 ```
