@@ -99,7 +99,7 @@ namespace JsonBridge {
 			Messages::MessageType type;
 			try {
 				type = Messages::parseBasicFormat(msg);
-			} catch (const Messages::InvalidMessageException &e) {
+			} catch (const Messages::InvalidMessageException &) {
 				// See if the message contains a client_id field as this would allow us to actually return
 				// an error to the respective client instead of simply writing something to cerr (which the
 				// client won't see).

@@ -1271,7 +1271,7 @@ nlohmann::json handle_findUserByName_noexcept(const MumbleAPI &api, const std::s
 			}
 		};
 		// clang-format on
-	} catch (const std::bad_optional_access &e) {
+	} catch (const std::bad_optional_access &) {
 		// clang-format off
 		response = {
 			{"response_type", "api_error_optional"},
@@ -1373,7 +1373,7 @@ nlohmann::json handle_findChannelByName_noexcept(const MumbleAPI &api, const std
 			}
 		};
 		// clang-format on
-	} catch (const std::bad_optional_access &e) {
+	} catch (const std::bad_optional_access &) {
 		// clang-format off
 		response = {
 			{"response_type", "api_error_optional"},
@@ -2064,3 +2064,4 @@ nlohmann::json execute(const std::string &functionName, const MumbleAPI &api, co
 
 	throw std::invalid_argument(std::string("Unknown API function \"") + functionName + "\"");
 }
+
