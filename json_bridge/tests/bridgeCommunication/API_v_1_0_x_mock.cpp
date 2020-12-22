@@ -337,30 +337,20 @@ mumble_error_t PLUGIN_CALLING_CONVENTION isUserLocallyMuted_v_1_0_x(mumble_plugi
 	return STATUS_OK;
 }
 
-mumble_error_t PLUGIN_CALLING_CONVENTION isLocalUserMuted_v_1_0_x(mumble_plugin_id_t callerID,
-																  mumble_connection_t connection, bool *muted) {
+mumble_error_t PLUGIN_CALLING_CONVENTION isLocalUserMuted_v_1_0_x(mumble_plugin_id_t callerID, bool *muted) {
 	calledFunctions["isLocalUserMuted"]++;
 
 	VERIFY_PLUGIN_ID(callerID);
-
-	// Right now there can only be one connection managed by the current ServerHandler
-	VERIFY_CONNECTION(connection);
-	ENSURE_CONNECTION_SYNCHRONIZED(connection);
 
 	*muted = false;
 
 	return STATUS_OK;
 }
 
-mumble_error_t PLUGIN_CALLING_CONVENTION isLocalUserDeafened_v_1_0_x(mumble_plugin_id_t callerID,
-																	 mumble_connection_t connection, bool *deafened) {
+mumble_error_t PLUGIN_CALLING_CONVENTION isLocalUserDeafened_v_1_0_x(mumble_plugin_id_t callerID, bool *deafened) {
 	calledFunctions["isLocalUserDeafened"]++;
 
 	VERIFY_PLUGIN_ID(callerID);
-
-	// Right now there can only be one connection managed by the current ServerHandler
-	VERIFY_CONNECTION(connection);
-	ENSURE_CONNECTION_SYNCHRONIZED(connection);
 
 	*deafened = false;
 
@@ -571,15 +561,10 @@ mumble_error_t PLUGIN_CALLING_CONVENTION requestLocalMute_v_1_0_x(mumble_plugin_
 	return STATUS_OK;
 }
 
-mumble_error_t PLUGIN_CALLING_CONVENTION requestLocalUserMute_v_1_0_x(mumble_plugin_id_t callerID,
-																	  mumble_connection_t connection, bool muted) {
+mumble_error_t PLUGIN_CALLING_CONVENTION requestLocalUserMute_v_1_0_x(mumble_plugin_id_t callerID, bool muted) {
 	calledFunctions["requestLocalUserMute"]++;
 
 	VERIFY_PLUGIN_ID(callerID);
-
-	// Right now there can only be one connection managed by the current ServerHandler
-	VERIFY_CONNECTION(connection);
-	ENSURE_CONNECTION_SYNCHRONIZED(connection);
 
 	// Don't actually do something
 	UNUSED(muted);
@@ -587,15 +572,10 @@ mumble_error_t PLUGIN_CALLING_CONVENTION requestLocalUserMute_v_1_0_x(mumble_plu
 	return STATUS_OK;
 }
 
-mumble_error_t PLUGIN_CALLING_CONVENTION requestLocalUserDeaf_v_1_0_x(mumble_plugin_id_t callerID,
-																	  mumble_connection_t connection, bool deafened) {
+mumble_error_t PLUGIN_CALLING_CONVENTION requestLocalUserDeaf_v_1_0_x(mumble_plugin_id_t callerID, bool deafened) {
 	calledFunctions["requestLocalUserDeaf"]++;
 
 	VERIFY_PLUGIN_ID(callerID);
-
-	// Right now there can only be one connection managed by the current ServerHandler
-	VERIFY_CONNECTION(connection);
-	ENSURE_CONNECTION_SYNCHRONIZED(connection);
 
 	// Don't actually do something
 	UNUSED(deafened);
