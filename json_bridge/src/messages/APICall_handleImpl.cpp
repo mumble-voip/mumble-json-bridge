@@ -18,7 +18,7 @@ const std::unordered_set< std::string > APICall::s_allFunctions = { "freeMemory"
 																	"getLocalUserTransmissionMode",
 																	"isUserLocallyMuted",
 																	"isLocalUserMuted",
-																	"isLocalUserDeafed",
+																	"isLocalUserDeafened",
 																	"getUserHash",
 																	"getServerHash",
 																	"getUserComment",
@@ -49,7 +49,7 @@ const std::unordered_set< std::string > APICall::s_allFunctions = { "freeMemory"
 
 const std::unordered_set< std::string > APICall::s_noParamFunctions = { "getActiveServerConnection",
 																		"getLocalUserTransmissionMode",
-																		"isLocalUserMuted", "isLocalUserDeafed" };
+																		"isLocalUserMuted", "isLocalUserDeafened" };
 
 nlohmann::json handle_freeMemory(const MumbleAPI &api, const std::string &bridgeSecret,
 								 const nlohmann::json &parameter) {
@@ -665,12 +665,12 @@ nlohmann::json handle_isLocalUserMuted(const MumbleAPI &api, const std::string &
 	return response;
 }
 
-nlohmann::json handle_isLocalUserDeafed(const MumbleAPI &api, const std::string &bridgeSecret) {
+nlohmann::json handle_isLocalUserDeafened(const MumbleAPI &api, const std::string &bridgeSecret) {
 	// Call respective API function
 	nlohmann::json response;
 
 	try {
-		bool ret = api.isLocalUserDeafed();
+		bool ret = api.isLocalUserDeafened();
 
 		// clang-format off
 		response = {
@@ -678,7 +678,7 @@ nlohmann::json handle_isLocalUserDeafed(const MumbleAPI &api, const std::string 
 			{"secret", bridgeSecret},
 			{"response",
 				{
-					{"function", "isLocalUserDeafed"},
+					{"function", "isLocalUserDeafened"},
 					{"status", "executed"},
 					{"return_value", ret}
 				}
@@ -1979,8 +1979,8 @@ nlohmann::json execute(const std::string &functionName, const MumbleAPI &api, co
 		return handle_isUserLocallyMuted(api, bridgeSecret, msg["parameter"]);
 	} else if (functionName == "isLocalUserMuted") {
 		return handle_isLocalUserMuted(api, bridgeSecret);
-	} else if (functionName == "isLocalUserDeafed") {
-		return handle_isLocalUserDeafed(api, bridgeSecret);
+	} else if (functionName == "isLocalUserDeafened") {
+		return handle_isLocalUserDeafened(api, bridgeSecret);
 	} else if (functionName == "getUserHash") {
 		return handle_getUserHash(api, bridgeSecret, msg["parameter"]);
 	} else if (functionName == "getServerHash") {
