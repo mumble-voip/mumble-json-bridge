@@ -57,7 +57,6 @@ namespace JsonBridge {
 			// Loop until the thread is interrupted
 			while (true) {
 				content = m_pipe.read_blocking();
-				std::cout << "Read from pipe:" << std::endl << content << std::endl;
 
 				try {
 					nlohmann::json message = nlohmann::json::parse(content);
