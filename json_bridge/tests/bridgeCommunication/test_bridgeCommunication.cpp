@@ -51,6 +51,8 @@ protected:
 	BridgeCommunication() : m_api(API_Mock::getMumbleAPI_v_1_0_x(), API_Mock::pluginID), m_bridge(m_api) {}
 
 	void SetUp() override {
+		ASSERT_FALSE(NamedPipe::exists(clientPipePath)) << "There already exists an old pipe";
+
 		m_bridgeSecret.clear();
 		m_clientPipe = NamedPipe::create(clientPipePath);
 		m_bridge.start();
@@ -79,11 +81,20 @@ protected:
 		}
 
 		m_clientPipe.destroy();
-		std::error_code ec;
-		ASSERT_FALSE(std::filesystem::exists(clientPipePath, ec) && !ec)
-			<< "Client pipe wasn't destroyed (" << ec << ")";
-		ASSERT_FALSE(std::filesystem::exists(Bridge::s_pipePath, ec) && !ec)
-			<< "Bridge pipe wasn't destroyed (" << ec << ")";
+
+		// For some reason using ASSERT_FALSE(...) << "msg" throws an SEH on windows
+		// The circumstances of this are very odd but seem to somehow relate to the
+		// test case for the invalid JSON. There were a couple of SEH errors in gtest
+		// in the past though and since I was unable to find any hints of an error in
+		// the code here, let's just assume that this is some sort of weird bug in gtest.
+		if (NamedPipe::exists(clientPipePath)) {
+			std::cerr << "Client pipe was not destroyed!" << std::endl;
+			FAIL();
+		}
+		if (NamedPipe::exists(Bridge::s_pipePath)) {
+			std::cerr << "Bridge pipe was not destroyed!" << std::endl;
+			FAIL();
+		}
 	}
 
 	void performRegistration() {
