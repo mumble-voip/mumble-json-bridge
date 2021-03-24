@@ -116,6 +116,11 @@ namespace JsonBridge {
 						  unsigned int timeout = 1000);
 
 		/**
+		 * @returns Whether a named pipe at the given path currently exists
+		 */
+		static bool exists(const std::filesystem::path &pipePath);
+
+		/**
 		 * Writes to the named pipe wrapped by this object by calling NamedPipe::write
 		 * @content The message that should be written to the named pipe
 		 * @content How long this function is allowed to take in milliseconds. The remarks from NamedPipe::write apply.
