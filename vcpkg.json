@@ -1,0 +1,8 @@
+{
+	"name": "mumble-json-bridge",
+	"version-string": "1.0.0",
+	"dependencies": [
+		"boost-thread",
+		"boost-program-options"
+	]
+}
