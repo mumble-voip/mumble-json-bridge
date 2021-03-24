@@ -151,13 +151,13 @@ TEST_F(BridgeCommunication, basic_registration) {
 	ASSERT_EQ(answerJson["response_type"], "registration");
 }
 
-TEST_F(BridgeCommunication, error_registrationWithNonExistantPipe) {
+TEST_F(BridgeCommunication, error_registrationWithNonExistentPipe) {
 	// clang-format off
 	nlohmann::json message = {
 		{"message_type", "registration"},
 		{"message",
 			{
-				{"pipe_path", (std::filesystem::path(PIPEDIR) / "NonExistantPipeName").string()},
+				{"pipe_path", (std::filesystem::path(PIPEDIR) / "NonExistentPipeName").string()},
 				{"secret", clientSecret}
 			}
 		}
