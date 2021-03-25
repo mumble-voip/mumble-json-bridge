@@ -90,8 +90,6 @@ namespace JsonBridge {
 	void Bridge::processMessage(const nlohmann::json &msg) {
 		CHECK_THREAD;
 
-		std::cout << "Message: " << msg.dump() << std::endl;
-
 		client_id_t id = INVALID_CLIENT_ID;
 
 		try {
