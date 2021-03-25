@@ -109,6 +109,11 @@ namespace JsonBridge {
 		}
 	}
 
+	bool NamedPipe::exists(const std::filesystem::path &pipePath) {
+		// We don't explicitly check whether the given path is a pipe or a regular file
+		return std::filesystem::exists(pipePath);
+	}
+
 	std::string NamedPipe::read_blocking(unsigned int timeout) const {
 		std::string content;
 
@@ -238,6 +243,41 @@ namespace JsonBridge {
 		}
 	}
 
+	// Implementation from https://stackoverflow.com/a/66588424/3907364
+	bool NamedPipe::exists(const std::filesystem::path &pipePath) {
+		std::string pipeName = pipePath.string();
+		if ((pipeName.size() < 10) || (pipeName.compare(0, 9, "\\\\.\\pipe\\") != 0)
+			|| (pipeName.find('\\', 9) != std::string::npos)) {
+			// This can't be a pipe, so it also can't exist
+			return false;
+		}
+		pipeName.erase(0, 9);
+
+		WIN32_FIND_DATA fd;
+		DWORD dwErrCode;
+
+		HANDLE hFind = FindFirstFileA("\\\\.\\pipe\\*", &fd);
+		if (hFind == INVALID_HANDLE_VALUE) {
+			dwErrCode = GetLastError();
+		} else {
+			do {
+				if (pipeName == fd.cFileName) {
+					FindClose(hFind);
+					return true;
+				}
+			} while (FindNextFileA(hFind, &fd));
+
+			dwErrCode = GetLastError();
+			FindClose(hFind);
+		}
+
+		if ((dwErrCode != ERROR_FILE_NOT_FOUND) && (dwErrCode != ERROR_NO_MORE_FILES)) {
+			throw PipeException< DWORD >(dwErrCode, "CheckExistance");
+		}
+
+		return false;
+	}
+
 	void disconnectAndReconnect(HANDLE pipeHandle, LPOVERLAPPED overlappedPtr, bool disconnectFirst,
 								unsigned int &timeout) {
 		if (disconnectFirst) {
@@ -364,6 +404,17 @@ namespace JsonBridge {
 
 		return *this;
 	}
+
+	void NamedPipe::destroy() {
+		if (!m_pipePath.empty()) {
+			if (!CloseHandle(m_handle)) {
+				std::cerr << "Failed at closing pipe handle: " << GetLastError() << std::endl;
+			}
+
+			m_pipePath.clear();
+			m_handle = INVALID_HANDLE_VALUE;
+		}
+	}
 #else  // PLATFORM_WINDOWS
 	NamedPipe::NamedPipe(NamedPipe &&other) : m_pipePath(std::move(other.m_pipePath)) { other.m_pipePath.clear(); }
 
@@ -374,29 +425,24 @@ namespace JsonBridge {
 
 		return *this;
 	}
-#endif // PLATFORM_WINDOWS
-
-	NamedPipe::~NamedPipe() { destroy(); }
-
-	std::filesystem::path NamedPipe::getPath() const noexcept { return m_pipePath; }
 
 	void NamedPipe::destroy() {
-		std::error_code errorCode;
-		if (!m_pipePath.empty() && std::filesystem::exists(m_pipePath, errorCode)) {
-#ifdef PLATFORM_WINDOWS
-			if (!CloseHandle(m_handle)) {
-				std::cerr << "Failed at closing pipe handle: " << GetLastError() << std::endl;
-			}
-#else
+		if (!m_pipePath.empty()) {
+			std::error_code errorCode;
 			std::filesystem::remove(m_pipePath, errorCode);
 
 			if (errorCode) {
 				std::cerr << "Failed at deleting pipe-object: " << errorCode << std::endl;
 			}
-#endif
+
 			m_pipePath.clear();
 		}
 	}
+#endif // PLATFORM_WINDOWS
+
+	NamedPipe::~NamedPipe() { destroy(); }
+
+	std::filesystem::path NamedPipe::getPath() const noexcept { return m_pipePath; }
 
 	void NamedPipe::write(const std::string &content, unsigned int timeout) const {
 		write(m_pipePath, content, timeout);

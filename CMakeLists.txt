@@ -22,6 +22,7 @@ endif()
 
 option(cli "Build the CLI" ON)
 option(plugin "Build the Mumble plugin" ON)
+option(static "Prefer static linkage" OFF)
 
 
 set(CMAKE_CXX_STANDARD 17)
@@ -30,6 +31,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(JSON_BuildTests OFF CACHE INTERNAL "")
 set(JSON_Install OFF CACHE INTERNAL "")
 set(JSON_ImplicitConversions OFF CACHE INTERNAL "")
+
+if (static)
+	set(Boost_USE_STATIC_LIBS ON)
+endif()
+
 
 # Make sure that ctest can be run from the build dir directly and not only in certain sub-dirs inside of it
 enable_testing()

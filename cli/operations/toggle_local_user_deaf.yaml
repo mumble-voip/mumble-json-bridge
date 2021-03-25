@@ -1,0 +1,17 @@
+operations:
+    - operation: toggle_local_user_deaf
+      depends:
+          - name: isDeafened
+            type: boolean
+            function:
+                type: api
+                name: isLocalUserDeafened
+      executes:
+          function:
+              type: api
+              name: requestLocalUserDeaf
+              parameter:
+                  - name: deafened
+                    value: "!isDeafened"
+
+

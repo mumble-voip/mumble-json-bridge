@@ -154,3 +154,31 @@ TEST(PipeIOTest4, write_timeout_pipeNotDrained) {
 
 	ASSERT_THROW(pipe.write("dummyMsg", 100), TimeoutException);
 }
+
+TEST(PipeIOTest4, check_existence) {
+	ASSERT_FALSE(NamedPipe::exists("I certainly don't exist on neither OS"));
+
+#ifdef PLATFORM_UNIX
+	ASSERT_FALSE(NamedPipe::exists("/This/Is/Not/A/valid/Path/To/a/pipe"));
+#else
+	ASSERT_FALSE(NamedPipe::exists("\\\\.\\pipe\\ICertainlyDontExistEvenThoughICouldBeValid"));
+#endif
+
+	NamedPipe dummyPipe = NamedPipe::create(std::filesystem::path(PIPEDIR) / "dummyPipe");
+
+	ASSERT_TRUE(NamedPipe::exists(dummyPipe.getPath()));
+}
+
+TEST(PipeIOTest4, create_destroy_check_existence) {
+	std::filesystem::path pipePath = std::filesystem::path(PIPEDIR) / "myPipe";
+
+	ASSERT_FALSE(NamedPipe::exists(pipePath));
+
+	NamedPipe pipe = NamedPipe::create(pipePath);
+
+	ASSERT_TRUE(NamedPipe::exists(pipePath));
+
+	pipe.destroy();
+
+	ASSERT_FALSE(NamedPipe::exists(pipePath));
+}

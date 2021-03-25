@@ -18,7 +18,7 @@ const std::unordered_set< std::string > APICall::s_allFunctions = { "freeMemory"
 																	"getLocalUserTransmissionMode",
 																	"isUserLocallyMuted",
 																	"isLocalUserMuted",
-																	"isLocalUserDeafed",
+																	"isLocalUserDeafened",
 																	"getUserHash",
 																	"getServerHash",
 																	"getUserComment",
@@ -48,7 +48,8 @@ const std::unordered_set< std::string > APICall::s_allFunctions = { "freeMemory"
 																	"playSample" };
 
 const std::unordered_set< std::string > APICall::s_noParamFunctions = { "getActiveServerConnection",
-																		"getLocalUserTransmissionMode" };
+																		"getLocalUserTransmissionMode",
+																		"isLocalUserMuted", "isLocalUserDeafened" };
 
 nlohmann::json handle_freeMemory(const MumbleAPI &api, const std::string &bridgeSecret,
 								 const nlohmann::json &parameter) {
@@ -626,23 +627,12 @@ nlohmann::json handle_isUserLocallyMuted(const MumbleAPI &api, const std::string
 	return response;
 }
 
-nlohmann::json handle_isLocalUserMuted(const MumbleAPI &api, const std::string &bridgeSecret,
-									   const nlohmann::json &parameter) {
-	// Validate specified parameter
-	if (parameter.size() != 1) {
-		throw InvalidMessageException(std::string("API function \"isLocalUserMuted\" expects 1 parameter(s) but got ")
-									  + std::to_string(parameter.size()));
-	}
-	MESSAGE_ASSERT_FIELD(parameter, "connection", number_integer);
-
-	// Convert the parameter from JSON to the corresponding cpp types
-	mumble_connection_t connection = parameter["connection"].get< mumble_connection_t >();
-
-	// Call respective API function with extracted parameter
+nlohmann::json handle_isLocalUserMuted(const MumbleAPI &api, const std::string &bridgeSecret) {
+	// Call respective API function
 	nlohmann::json response;
 
 	try {
-		bool ret = api.isLocalUserMuted(connection);
+		bool ret = api.isLocalUserMuted();
 
 		// clang-format off
 		response = {
@@ -675,23 +665,12 @@ nlohmann::json handle_isLocalUserMuted(const MumbleAPI &api, const std::string &
 	return response;
 }
 
-nlohmann::json handle_isLocalUserDeafed(const MumbleAPI &api, const std::string &bridgeSecret,
-										const nlohmann::json &parameter) {
-	// Validate specified parameter
-	if (parameter.size() != 1) {
-		throw InvalidMessageException(std::string("API function \"isLocalUserDeafed\" expects 1 parameter(s) but got ")
-									  + std::to_string(parameter.size()));
-	}
-	MESSAGE_ASSERT_FIELD(parameter, "connection", number_integer);
-
-	// Convert the parameter from JSON to the corresponding cpp types
-	mumble_connection_t connection = parameter["connection"].get< mumble_connection_t >();
-
-	// Call respective API function with extracted parameter
+nlohmann::json handle_isLocalUserDeafened(const MumbleAPI &api, const std::string &bridgeSecret) {
+	// Call respective API function
 	nlohmann::json response;
 
 	try {
-		bool ret = api.isLocalUserDeafed(connection);
+		bool ret = api.isLocalUserDeafened();
 
 		// clang-format off
 		response = {
@@ -699,7 +678,7 @@ nlohmann::json handle_isLocalUserDeafed(const MumbleAPI &api, const std::string 
 			{"secret", bridgeSecret},
 			{"response",
 				{
-					{"function", "isLocalUserDeafed"},
+					{"function", "isLocalUserDeafened"},
 					{"status", "executed"},
 					{"return_value", ret}
 				}
@@ -1078,22 +1057,20 @@ nlohmann::json handle_requestLocalMute(const MumbleAPI &api, const std::string &
 nlohmann::json handle_requestLocalUserMute(const MumbleAPI &api, const std::string &bridgeSecret,
 										   const nlohmann::json &parameter) {
 	// Validate specified parameter
-	if (parameter.size() != 2) {
+	if (parameter.size() != 1) {
 		throw InvalidMessageException(
-			std::string("API function \"requestLocalUserMute\" expects 2 parameter(s) but got ")
+			std::string("API function \"requestLocalUserMute\" expects 1 parameter(s) but got ")
 			+ std::to_string(parameter.size()));
 	}
-	MESSAGE_ASSERT_FIELD(parameter, "connection", number_integer);
 	MESSAGE_ASSERT_FIELD(parameter, "muted", boolean);
 
 	// Convert the parameter from JSON to the corresponding cpp types
-	mumble_connection_t connection = parameter["connection"].get< mumble_connection_t >();
-	bool muted                     = parameter["muted"].get< bool >();
+	bool muted = parameter["muted"].get< bool >();
 
 	// Call respective API function with extracted parameter
 	nlohmann::json response;
 
-	mumble_error_t ret = api.requestLocalUserMute(connection, muted);
+	mumble_error_t ret = api.requestLocalUserMute(muted);
 
 	// clang-format off
 	response = {
@@ -1115,22 +1092,20 @@ nlohmann::json handle_requestLocalUserMute(const MumbleAPI &api, const std::stri
 nlohmann::json handle_requestLocalUserDeaf(const MumbleAPI &api, const std::string &bridgeSecret,
 										   const nlohmann::json &parameter) {
 	// Validate specified parameter
-	if (parameter.size() != 2) {
+	if (parameter.size() != 1) {
 		throw InvalidMessageException(
-			std::string("API function \"requestLocalUserDeaf\" expects 2 parameter(s) but got ")
+			std::string("API function \"requestLocalUserDeaf\" expects 1 parameter(s) but got ")
 			+ std::to_string(parameter.size()));
 	}
-	MESSAGE_ASSERT_FIELD(parameter, "connection", number_integer);
 	MESSAGE_ASSERT_FIELD(parameter, "deafened", boolean);
 
 	// Convert the parameter from JSON to the corresponding cpp types
-	mumble_connection_t connection = parameter["connection"].get< mumble_connection_t >();
-	bool deafened                  = parameter["deafened"].get< bool >();
+	bool deafened = parameter["deafened"].get< bool >();
 
 	// Call respective API function with extracted parameter
 	nlohmann::json response;
 
-	mumble_error_t ret = api.requestLocalUserDeaf(connection, deafened);
+	mumble_error_t ret = api.requestLocalUserDeaf(deafened);
 
 	// clang-format off
 	response = {
@@ -1271,7 +1246,7 @@ nlohmann::json handle_findUserByName_noexcept(const MumbleAPI &api, const std::s
 			}
 		};
 		// clang-format on
-	} catch (const std::bad_optional_access &e) {
+	} catch (const std::bad_optional_access &) {
 		// clang-format off
 		response = {
 			{"response_type", "api_error_optional"},
@@ -1373,7 +1348,7 @@ nlohmann::json handle_findChannelByName_noexcept(const MumbleAPI &api, const std
 			}
 		};
 		// clang-format on
-	} catch (const std::bad_optional_access &e) {
+	} catch (const std::bad_optional_access &) {
 		// clang-format off
 		response = {
 			{"response_type", "api_error_optional"},
@@ -2003,9 +1978,9 @@ nlohmann::json execute(const std::string &functionName, const MumbleAPI &api, co
 	} else if (functionName == "isUserLocallyMuted") {
 		return handle_isUserLocallyMuted(api, bridgeSecret, msg["parameter"]);
 	} else if (functionName == "isLocalUserMuted") {
-		return handle_isLocalUserMuted(api, bridgeSecret, msg["parameter"]);
-	} else if (functionName == "isLocalUserDeafed") {
-		return handle_isLocalUserDeafed(api, bridgeSecret, msg["parameter"]);
+		return handle_isLocalUserMuted(api, bridgeSecret);
+	} else if (functionName == "isLocalUserDeafened") {
+		return handle_isLocalUserDeafened(api, bridgeSecret);
 	} else if (functionName == "getUserHash") {
 		return handle_getUserHash(api, bridgeSecret, msg["parameter"]);
 	} else if (functionName == "getServerHash") {
@@ -2064,3 +2039,4 @@ nlohmann::json execute(const std::string &functionName, const MumbleAPI &api, co
 
 	throw std::invalid_argument(std::string("Unknown API function \"") + functionName + "\"");
 }
+

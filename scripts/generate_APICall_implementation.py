@@ -298,7 +298,7 @@ def main():
                 generatedFunction += "\t}"
 
             if "std::optional" in returnType:
-                generatedFunction += " catch (const std::bad_optional_access &e) {\n"
+                generatedFunction += " catch (const std::bad_optional_access &) {\n"
                 generatedFunction += "\t\t// clang-format off\n"
                 generatedFunction += "\t\tresponse = {\n"
                 generatedFunction += "\t\t\t{\"response_type\", \"api_error_optional\"},\n"

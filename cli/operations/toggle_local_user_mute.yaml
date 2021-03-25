@@ -1,0 +1,16 @@
+operations:
+    - operation: toggle_local_user_mute
+      depends:
+          - name: isMuted
+            type: boolean
+            function:
+                type: api
+                name: isLocalUserMuted
+      executes:
+          function:
+              type: api
+              name: requestLocalUserMute
+              parameter:
+                  - name: muted
+                    value: "!isMuted"
+

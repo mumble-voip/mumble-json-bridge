@@ -3,15 +3,15 @@
 # that can be found in the LICENSE file at the root of the
 # source tree.
 
-add_executable(json_bridge_cli
+add_executable(mumble_json_bridge_cli
 	main.cpp
 	JSONInterface.cpp
 	JSONInstruction.cpp
 	handleOperation.cpp
 )
 
-target_link_libraries(json_bridge_cli PUBLIC json_bridge)
+target_link_libraries(mumble_json_bridge_cli PUBLIC json_bridge)
 
 find_package(Boost COMPONENTS program_options REQUIRED)
-target_link_libraries(json_bridge_cli PUBLIC ${Boost_LIBRARIES})
-target_include_directories(json_bridge_cli PUBLIC ${Boost_INCLUDE_DIRS})
+target_link_libraries(mumble_json_bridge_cli PUBLIC ${Boost_LIBRARIES})
+target_include_directories(mumble_json_bridge_cli PUBLIC ${Boost_INCLUDE_DIRS})

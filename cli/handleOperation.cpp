@@ -209,6 +209,104 @@ nlohmann::json handle_move_operation(const nlohmann::json &msg,
 	return result;
 }
 
+nlohmann::json
+	handle_toggle_local_user_mute_operation(const nlohmann::json &msg,
+											const std::function< nlohmann::json(nlohmann::json &) > &executeQuery) {
+	if (msg.contains("parameter")) {
+		::Mumble::JsonBridge::Messages::InvalidMessageException(
+			"Operation \"toggle_local_user_mute\" does not take any parameter");
+	}
+
+	// Obtain all needed values
+
+	// clang-format off
+	nlohmann::json query1 = {
+		{ "message_type", "api_call" },
+		{ "message",
+			{
+				{ "function", "isLocalUserMuted" }
+			}
+		}
+	};
+	// clang-format on
+
+	nlohmann::json response1 = executeQuery(query1);
+
+	checkAPIResponse(response1);
+	bool isMuted = response1["response"]["return_value"].get< bool >();
+
+
+	// Now actually execute the operation
+	// clang-format off
+	nlohmann::json operationQuery = {
+		{ "message_type", "api_call" },
+		{ "message",
+			{
+				{ "function", "requestLocalUserMute" },
+				{ "parameter",
+					{
+						{ "muted", !isMuted }
+					}
+				}
+			}
+		}
+	};
+	// clang-format on
+
+	nlohmann::json result = executeQuery(operationQuery);
+
+	return result;
+}
+
+nlohmann::json
+	handle_toggle_local_user_deaf_operation(const nlohmann::json &msg,
+											const std::function< nlohmann::json(nlohmann::json &) > &executeQuery) {
+	if (msg.contains("parameter")) {
+		::Mumble::JsonBridge::Messages::InvalidMessageException(
+			"Operation \"toggle_local_user_deaf\" does not take any parameter");
+	}
+
+	// Obtain all needed values
+
+	// clang-format off
+	nlohmann::json query1 = {
+		{ "message_type", "api_call" },
+		{ "message",
+			{
+				{ "function", "isLocalUserDeafened" }
+			}
+		}
+	};
+	// clang-format on
+
+	nlohmann::json response1 = executeQuery(query1);
+
+	checkAPIResponse(response1);
+	bool isDeafened = response1["response"]["return_value"].get< bool >();
+
+
+	// Now actually execute the operation
+	// clang-format off
+	nlohmann::json operationQuery = {
+		{ "message_type", "api_call" },
+		{ "message",
+			{
+				{ "function", "requestLocalUserDeaf" },
+				{ "parameter",
+					{
+						{ "deafened", !isDeafened }
+					}
+				}
+			}
+		}
+	};
+	// clang-format on
+
+	nlohmann::json result = executeQuery(operationQuery);
+
+	return result;
+}
+
 nlohmann::json handleOperation(const nlohmann::json &msg,
 							   const std::function< nlohmann::json(nlohmann::json &) > &executeQuery) {
 	if (!msg.contains("operation") || !msg["operation"].is_string()) {
@@ -219,6 +317,10 @@ nlohmann::json handleOperation(const nlohmann::json &msg,
 		return handle_get_local_user_name_operation(msg, executeQuery);
 	} else if (msg["operation"].get< std::string >() == "move") {
 		return handle_move_operation(msg, executeQuery);
+	} else if (msg["operation"].get< std::string >() == "toggle_local_user_mute") {
+		return handle_toggle_local_user_mute_operation(msg, executeQuery);
+	} else if (msg["operation"].get< std::string >() == "toggle_local_user_deaf") {
+		return handle_toggle_local_user_deaf_operation(msg, executeQuery);
 	} else {
 		throw OperationException(std::string("Unknown operation \"") + msg["operation"].get< std::string >() + "\"");
 	}

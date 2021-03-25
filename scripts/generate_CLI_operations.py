@@ -111,6 +111,11 @@ def generateAPIFunctionCall(queryName, responseName, functionName, parameter):
                 # convert empty to empty string
                 value  = "\"\""
 
+            if type(value) == bool:
+                # Make sure that booleans are used in a c-compatible way
+                value = "true" if value else "false"
+
+            assert type(value) == type("")
             generatedCode += "\t\t\t\t\t{ \"" + currentParam["name"] + "\", " + value + " },\n"
 
         # remove trailing ",\n"
