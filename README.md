@@ -13,3 +13,4 @@ In order to build the project, you will require
 - A cpp17 conform compiler
 - CMake v3.10 or more recent
 - Boost (required components: program-options and thread)
+- Python3 with the [PyYAML](https://pypi.org/project/PyYAML/) package (only needed when building the CLI)
