@@ -101,5 +101,6 @@ Operations can also take parameter, which are handled in the same way as paramet
 ```
 
 All operations are defined in the [operations](operations/) directory in form of a YAML file. It
-contains the definition of the operation and also what parameter it takes.
+contains the definition of the operation and also what parameter it takes (parameters that have
+default values defined are optional).
 
