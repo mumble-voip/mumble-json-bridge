@@ -13,6 +13,8 @@ project(mumble-json-bridge
 	LANGUAGES "CXX"
 )
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+
 if ("${CMAKE_SIZEOF_VOID_P}" STREQUAL "8")
 	message(STATUS "Building 64bit")
 else()
