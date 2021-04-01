@@ -25,6 +25,14 @@ jobs:
         with:
             submodules: 'recursive'
 
+      - uses: actions/setup-python@v2
+        with:
+            python-version: "3.x"
+
+      - uses: BSFishy/pip-action@v1
+        with:
+            packages: PyYAML
+
       - uses: lukka/get-cmake@latest
 
       # Restore from cache the previously built ports. If a "cache miss"
