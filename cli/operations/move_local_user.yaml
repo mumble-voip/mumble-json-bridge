@@ -1,0 +1,45 @@
+operations:
+    - operation: move_local_user
+      parameter:
+          - name: channel
+            type: string
+          - name: password
+            type: string
+            default: '""'
+      depends:
+          - name: connectionID
+            type: number_integer
+            function:
+                type: api
+                name: getActiveServerConnection
+          - name: userID
+            type: number_integer
+            function:
+                type: api
+                name: getLocalUserID
+                parameter:
+                    - name: connection
+                      value: connectionID
+          - name: channelID
+            type: number_integer
+            function:
+                type: api
+                name: findChannelByName
+                parameter:
+                    - name: connection
+                      value: connectionID
+                    - name: channel_name
+                      value: channel
+      executes:
+          function:
+              type: api
+              name: requestUserMove
+              parameter:
+                  - name: connection
+                    value: connectionID
+                  - name: user_id
+                    value: userID
+                  - name: channel_id
+                    value: channelID
+                  - name: password
+                    value: password
