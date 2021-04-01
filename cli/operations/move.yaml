@@ -5,6 +5,9 @@ operations:
             type: string
           - name: channel
             type: string
+          - name: password
+            type: string
+            default: '""'
       depends:
           - name: connectionID
             type: number_integer
@@ -43,4 +46,4 @@ operations:
                   - name: channel_id
                     value: channelID
                   - name: password
-                    value: ""
+                    value: password
