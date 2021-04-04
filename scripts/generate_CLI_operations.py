@@ -68,14 +68,19 @@ def generateParameterProcessing(parameter, messageName, operationName):
     generatedCode = "// Validate and extract parameter\n"
     generatedCode += "\n"
 
+    requiredParamCount = 0
+    for currentParam in parameter:
+        if not "default" in currentParam:
+            requiredParamCount += 1
+
     # verify that the correct amount of parameter is provided
     generatedCode += "MESSAGE_ASSERT_FIELD(" + messageName + ", \"parameter\", object);\n"
     generatedCode += "\n"
     generatedCode += "const nlohmann::json &operationParams = " + messageName + "[\"parameter\"];\n"
     generatedCode += "\n"
-    generatedCode += "if (operationParams.size() != " + str(len(parameter)) + ") {\n"
+    generatedCode += "if (operationParams.size() < " + str(requiredParamCount) + ") {\n"
     generatedCode += "\tthrow ::Mumble::JsonBridge::Messages::InvalidMessageException(std::string(\"Operation \\\"" + operationName \
-            + "\\\" expects " + str(len(parameter)) + " parameter, but was provided with \") + std::to_string(operationParams.size()));\n"
+            + "\\\" expects at least " + str(requiredParamCount) + " parameter, but was provided with \") + std::to_string(operationParams.size()));\n"
     generatedCode += "}\n"
     generatedCode += "\n"
 
@@ -84,9 +89,18 @@ def generateParameterProcessing(parameter, messageName, operationName):
         paramName = currentParam["name"]
         paramType = currentParam["type"]
 
-        generatedCode += "MESSAGE_ASSERT_FIELD(operationParams, \"" + paramName + "\", " + paramType + ");\n"
-        generatedCode += jsonTypeToCppType(paramType) + " " + paramName + " = operationParams[\"" + paramName + "\"].get<"\
-                + jsonTypeToCppType(paramType) + ">();\n"
+        if "default" in currentParam:
+            generatedCode += jsonTypeToCppType(paramType) + " " + paramName + " = " + currentParam["default"] + ";\n"
+            generatedCode += "if (operationParams.contains(\"" + paramName + "\")) {\n"
+            generatedCode += "\t// Validate the param type\n"
+            generatedCode += "\tMESSAGE_ASSERT_FIELD(operationParams, \"" + paramName + "\", " + paramType + ");\n"
+            generatedCode += "\t" + jsonTypeToCppType(paramType) + " " + paramName + " = operationParams[\"" + paramName + "\"].get<"\
+                    + jsonTypeToCppType(paramType) + ">();\n"
+            generatedCode += "}\n"
+        else:
+            generatedCode += "MESSAGE_ASSERT_FIELD(operationParams, \"" + paramName + "\", " + paramType + ");\n"
+            generatedCode += jsonTypeToCppType(paramType) + " " + paramName + " = operationParams[\"" + paramName + "\"].get<"\
+                    + jsonTypeToCppType(paramType) + ">();\n"
         generatedCode += "\n"
 
     return generatedCode

@@ -1,8 +1,6 @@
 operations:
-    - operation: move
+    - operation: move_local_user
       parameter:
-          - name: user
-            type: string
           - name: channel
             type: string
           - name: password
@@ -18,12 +16,10 @@ operations:
             type: number_integer
             function:
                 type: api
-                name: findUserByName
+                name: getLocalUserID
                 parameter:
                     - name: connection
                       value: connectionID
-                    - name: user_name
-                      value: user
           - name: channelID
             type: number_integer
             function:
