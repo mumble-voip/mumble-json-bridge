@@ -1,0 +1,69 @@
+name: PR-Checks
+
+on: [pull_request]
+
+env:
+  buildDir: ${{ github.workspace }}/build/
+
+jobs:
+  pr-checks:
+    runs-on: ubuntu-20.04
+
+    steps:
+
+    - uses: actions/checkout@v2
+      with:
+          submodules: 'recursive'
+
+    - name: Check line endings
+      uses: erclu/check-crlf@v1
+
+    - uses: BSFishy/pip-action@v1
+      with:
+          packages: PyYAML
+  
+    - uses: lukka/get-cmake@latest
+
+    # Restore from cache the previously built ports. If a "cache miss"
+    # occurs, then vcpkg is bootstrapped. Since a the vcpkg.json is
+    # being used later on to install the packages when run-cmake runs,
+    # no packages are installed at this time and the input 'setupOnly:true
+    # is mandatory.
+    - name: Restore artifacts / setup vcpkg
+      uses: lukka/run-vcpkg@v7
+      with:
+        # Just install vcpkg for now, do not install any ports
+        # in this step yet.
+        setupOnly: true
+        vcpkgGitCommitId: 3166bcc15b156b57667d9e573fba9775ceef3eb1
+        # Since the cache must be invalidated when content of the
+        # vcpkg.json file changes, let's compute its hash and append
+        # this to the computed cache's key.
+        appendedCacheKey: ${{ hashFiles( '**/vcpkg.json' ) }}
+        vcpkgTriplet: ${{ matrix.triplet }}
+        # Ensure the vcpkg artifacts are cached, they are generated in the
+        # 'CMAKE_BINARY_DIR/vcpkg_installed' directory.
+        additionalCachedPaths: ${{ env.buildDir }}/vcpkg_installed
+
+    - name: Configure
+      uses: lukka/run-cmake@v3
+      with:
+        cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
+        cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
+        buildDirectory: ${{ env.buildDir }}
+        # This input tells run-cmake to consume the vcpkg.cmake toolchain
+        # file set by run-vcpkg.
+        useVcpkgToolchainFile: true
+        buildWithCMake: false
+        cmakeAppendedArgs: -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+    - name: Link compile-command DB
+      run: ln -s "${{ env.buildDir }}/compile_commands.json" .
+      shell: bash
+
+    - name: Check code formatting
+      uses: jidicula/clang-format-action@v3.3.0
+      with:
+          clang-format-version: '10'
+          check-path: '.'
+          exclude-regex: '(3rdParty/*|build/*|vcpkg/*)'
