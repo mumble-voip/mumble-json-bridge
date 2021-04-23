@@ -1,4 +1,4 @@
-// Copyright 2020 The Mumble Developers. All rights reserved.
+// Copyright 2021-2020 The Mumble Developers. All rights reserved.
 // Use of this source code is governed by a BSD-style license
 // that can be found in the LICENSE file at the root of the
 // source tree.
@@ -1432,7 +1432,7 @@ nlohmann::json handle_getMumbleSetting_int(const MumbleAPI &api, const std::stri
 	nlohmann::json response;
 
 	try {
-		int ret = api.getMumbleSetting_int(key);
+		int64_t ret = api.getMumbleSetting_int(key);
 
 		// clang-format off
 		response = {
@@ -2039,4 +2039,3 @@ nlohmann::json execute(const std::string &functionName, const MumbleAPI &api, co
 
 	throw std::invalid_argument(std::string("Unknown API function \"") + functionName + "\"");
 }
-

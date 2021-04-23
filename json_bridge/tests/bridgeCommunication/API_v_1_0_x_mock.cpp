@@ -658,7 +658,7 @@ mumble_error_t PLUGIN_CALLING_CONVENTION getMumbleSetting_bool_v_1_0_x(mumble_pl
 }
 
 mumble_error_t PLUGIN_CALLING_CONVENTION getMumbleSetting_int_v_1_0_x(mumble_plugin_id_t callerID,
-																	  mumble_settings_key_t key, int *outValue) {
+																	  mumble_settings_key_t key, int64_t *outValue) {
 	calledFunctions["getMumbleSetting_int"]++;
 
 	VERIFY_PLUGIN_ID(callerID);
@@ -707,7 +707,7 @@ mumble_error_t PLUGIN_CALLING_CONVENTION setMumbleSetting_bool_v_1_0_x(mumble_pl
 }
 
 mumble_error_t PLUGIN_CALLING_CONVENTION setMumbleSetting_int_v_1_0_x(mumble_plugin_id_t callerID,
-																	  mumble_settings_key_t key, int value) {
+																	  mumble_settings_key_t key, int64_t value) {
 	calledFunctions["setMumbleSetting_int"]++;
 
 	VERIFY_PLUGIN_ID(callerID);
