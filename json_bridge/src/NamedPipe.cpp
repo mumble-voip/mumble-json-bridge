@@ -154,7 +154,7 @@ namespace JsonBridge {
 #endif
 
 #ifdef PLATFORM_WINDOWS
-	using handle_t = FileHandleWrapper< HANDLE, BOOL (*)(HANDLE), INVALID_HANDLE_VALUE, true >;
+	using handle_t = FileHandleWrapper< HANDLE, decltype(&CloseHandle), INVALID_HANDLE_VALUE, true >;
 
 	void waitOnAsyncIO(HANDLE handle, LPOVERLAPPED overlappedPtr, unsigned int &timeout) {
 		constexpr unsigned int pendingWaitInterval = 10;
