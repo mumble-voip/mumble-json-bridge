@@ -15,7 +15,7 @@ jobs:
             triplet: x64-linux
           - os: windows-2022
             triplet: x64-windows
-          - os: macos-latest
+          - os: macos-14
             triplet: x64-osx
 
     runs-on: ${{ matrix.os }}
