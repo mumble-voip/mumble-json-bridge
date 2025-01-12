@@ -8,7 +8,7 @@
 #include <mumble/json_bridge/Bridge.h>
 #include <mumble/json_bridge/NamedPipe.h>
 
-#include "API_v_1_0_x_mock.h"
+#include "API_mock.h"
 
 #include <nlohmann/json.hpp>
 
@@ -48,7 +48,7 @@ protected:
 	NamedPipe m_clientPipe;
 	std::string m_bridgeSecret;
 
-	BridgeCommunication() : m_api(API_Mock::getMumbleAPI_v_1_0_x(), API_Mock::pluginID), m_bridge(m_api) {}
+	BridgeCommunication() : m_api(API_Mock::getMumbleAPI_v_1_2_x(), API_Mock::pluginID), m_bridge(m_api) {}
 
 	void SetUp() override {
 		ASSERT_FALSE(NamedPipe::exists(clientPipePath)) << "There already exists an old pipe";

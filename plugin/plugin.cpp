@@ -23,7 +23,7 @@ public:
 
 		m_bridge.start();
 
-		return STATUS_OK;
+		return MUMBLE_STATUS_OK;
 	}
 
 	void shutdown() noexcept override {

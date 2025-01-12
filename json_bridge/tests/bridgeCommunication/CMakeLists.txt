@@ -5,5 +5,5 @@
 
 create_test(test_bridgeCommunication
 	test_bridgeCommunication.cpp
-	API_v_1_0_x_mock.cpp
+	API_mock.cpp
 )

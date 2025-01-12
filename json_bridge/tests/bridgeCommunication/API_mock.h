@@ -1,7 +1,7 @@
 #ifndef API_MOCK_H_
 #define API_MOCK_H_
 
-#include <mumble/plugin/internal/MumbleAPI_v_1_0_x.h>
+#include <mumble/plugin/internal/MumblePlugin.h>
 
 #include <string>
 #include <unordered_map>
@@ -22,7 +22,7 @@ static const std::string otherUserChannelName        = "Channel of other user";
 static const std::string localUserChannelDesc        = "Channel of local user (description)";
 static const std::string otherUserChannelDesc        = "Channel of other user (description)";
 
-MumbleAPI_v_1_0_x getMumbleAPI_v_1_0_x();
+MumbleAPI_v_1_2_x getMumbleAPI_v_1_2_x();
 
 }; // namespace API_Mock
 
