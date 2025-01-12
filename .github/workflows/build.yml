@@ -11,9 +11,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-20.04
+          - os: ubuntu-24.04
             triplet: x64-linux
-          - os: windows-2019
+          - os: windows-2022
             triplet: x64-windows
           - os: macos-latest
             triplet: x64-osx
@@ -21,7 +21,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
             submodules: 'recursive'
 
