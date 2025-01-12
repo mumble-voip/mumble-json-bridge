@@ -46,7 +46,7 @@ jobs:
           # Just install vcpkg for now, do not install any ports
           # in this step yet.
           setupOnly: true
-          vcpkgGitCommitId: 3166bcc15b156b57667d9e573fba9775ceef3eb1
+          vcpkgGitCommitId: 401edd4e93917851f003f88c0fed03d20eba47bc
           # Since the cache must be invalidated when content of the
           # vcpkg.json file changes, let's compute its hash and append
           # this to the computed cache's key.
